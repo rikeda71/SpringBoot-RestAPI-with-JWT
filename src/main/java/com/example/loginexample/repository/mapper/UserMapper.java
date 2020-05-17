@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -51,9 +52,10 @@ public interface UserMapper {
     public String update(User user) {
       return new SQL()
           .UPDATE("USER")
-          .SET("name, password", "#{name}, #{password}")
-          .SET("lock_version", "lock_version + 1")
-          .SET("update_at", LocalDateTime.now().toString())
+          .SET("name = #{name}")
+          .SET("password = #{password}")
+          .SET("lock_version = lock_version + 1")
+          .SET("updated_at = \"" + LocalDateTime.now().toString() + "\"")
           .WHERE("user_id = #{userId}")
           .toString();
     }
@@ -61,9 +63,9 @@ public interface UserMapper {
     public String logicalDelete(Long userId) {
       return new SQL()
           .UPDATE("USER")
-          .SET("delete_flag", "1")
-          .SET("lock_version", "lock_version + 1")
-          .SET("update_at", LocalDateTime.now().toString())
+          .SET("delete_flag = 1")
+          .SET("lock_version = lock_version + 1")
+          .SET("updated_at = \"" + LocalDateTime.now().toString() + "\"")
           .WHERE("user_id = #{userId}")
           .toString();
     }
