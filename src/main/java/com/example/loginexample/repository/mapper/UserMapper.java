@@ -15,7 +15,7 @@ import org.apache.ibatis.jdbc.SQL;
 @Mapper
 public interface UserMapper {
 
-  @Select("SELECT user_id, name, password, created_at, updated_at, lock_version, delete_flag FROM USER WHERE user_id = #{userId}")
+  @Select("SELECT * FROM USER WHERE user_id = #{userId}")
   @Results(id = "User", value = {
       @Result(id = true, column = "user_id", property = "userId"),
       @Result(column = "name", property = "name"),
@@ -26,6 +26,9 @@ public interface UserMapper {
       @Result(column = "delete_flag", property = "deleteFlag")
   })
   User findById(@Param("userId") Long userId);
+
+  @Select("SELECT * FROM USER WHERE name = #{name}")
+  User findByName(@Param("name") String name);
 
   @InsertProvider(type = UserSqlProvider.class, method = "insert")
   void insert(User user);

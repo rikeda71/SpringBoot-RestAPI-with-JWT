@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-  private UserMapper userMapper;
+  private final UserMapper userMapper;
 
   public UserRepositoryImpl(UserMapper userMapper) {
     this.userMapper = userMapper;
@@ -19,17 +19,22 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   @Override
-  public void insert(User user) {
+  public User findByName(String name) {
+    return this.userMapper.findByName(name);
+  }
 
+  @Override
+  public void insert(User user) {
+    this.userMapper.insert(user);
   }
 
   @Override
   public void update(User user) {
-
+    this.userMapper.update(user);
   }
 
   @Override
   public void delete(Long userId) {
-
+    this.userMapper.delete(userId);
   }
 }

@@ -4,6 +4,11 @@ import com.example.loginexample.domain.User;
 
 public interface UserService {
 
-  public User findById(Long userId);
+  User findById(Long userId);
 
+  void add(User user);
+
+  void set(User user);
+
+  void remove(Long userId);
 }

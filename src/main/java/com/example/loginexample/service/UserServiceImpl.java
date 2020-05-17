@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
 
   public UserServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
@@ -16,5 +16,20 @@ public class UserServiceImpl implements UserService {
   @Override
   public User findById(Long userId) {
     return this.userRepository.findById(userId);
+  }
+
+  @Override
+  public void add(User user) {
+    this.userRepository.insert(user);
+  }
+
+  @Override
+  public void set(User user) {
+    this.userRepository.update(user);
+  }
+
+  @Override
+  public void remove(Long userId) {
+    this.userRepository.delete(userId);
   }
 }

@@ -6,6 +6,8 @@ public interface UserRepository {
 
   public User findById(Long userId);
 
+  public User findByName(String name);
+
   public void insert(User user);
 
   public void update(User user);
