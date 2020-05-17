@@ -1,11 +1,31 @@
-# RestAPIExampleWithSpringSecurity
+# SpringBoot-RestAPI-with-JWT
 
-Rest API Example with SpringBoot + SpringSecurity
+The Example of Rest API with SpringBoot + SpringSecurity + JWT(Json Web Token)
 
 ## Usage
 
-```shell-script
-$ docker-compose up -d
-$ ./mvnw package
-$ java -jar target/loginexample-0.0.1-SNAPSHOT.jar
-```
+  - start up web app
+
+  ```shell-script
+  $ docker-compose up -d
+  $ ./mvnw sprint-boot:run
+  ```
+
+  - authorize
+
+  ```shell-script
+  $ curl -v -X POST -d '{"name": "user1", "password": "password"}' "http://localhost:8080/login"
+  .
+  .
+  .
+  < Authorization: Bearer ...      <- copy
+  .
+  .
+  .
+  ```
+
+  - request with authorization
+
+  ```shell-script
+  $ curl -XPATCH -H "Authorization: Bearer ..."(... is encoded token copied the previous step) -H "Content-type: application/json" -d '{"name": "user2","password": "password2"}' 'http://localhost:8080/services/v1/user/1'
+  ```
