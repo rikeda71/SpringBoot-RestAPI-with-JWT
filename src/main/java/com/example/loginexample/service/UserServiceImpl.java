@@ -19,6 +19,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public User findByName(String name) {
+    return this.userRepository.findByName(name);
+  }
+
+  @Override
   public void add(User user) {
     this.userRepository.insert(user);
   }

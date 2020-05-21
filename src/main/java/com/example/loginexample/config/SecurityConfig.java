@@ -3,6 +3,7 @@ package com.example.loginexample.config;
 import com.example.loginexample.security.JwtAuthenticationFilter;
 import com.example.loginexample.security.JwtAuthorizationFilter;
 import com.example.loginexample.security.UserDetailsServiceImpl;
+import com.example.loginexample.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   UserDetailsServiceImpl userDetailsService;
 
+  @Autowired
+  UserService userService;
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
@@ -42,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and().logout()
         .and().csrf().disable() // frontendとの連携のため，無効
         .addFilter(new JwtAuthenticationFilter(authenticationManager(), passwordEncoder()))
-        .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+        .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 

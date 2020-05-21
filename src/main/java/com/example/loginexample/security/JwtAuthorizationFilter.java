@@ -1,5 +1,6 @@
 package com.example.loginexample.security;
 
+import com.example.loginexample.service.UserService;
 import io.jsonwebtoken.Jwts;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,9 +16,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
   private AuthenticationManager authenticationManager;
+  private UserService userService;
 
-  public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+  public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserService userService) {
     super(authenticationManager);
+    this.userService = userService;
   }
 
   @Override
@@ -46,6 +49,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         .getBody()
         .getSubject();
 
-    return userString != null ? new UsernamePasswordAuthenticationToken(userString, null, new ArrayList<>()) : null;
+    // insert user domain to principal
+    var user = this.userService.findByName(userString);
+    return userString != null ? new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()) : null;
   }
 }

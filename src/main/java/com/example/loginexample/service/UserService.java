@@ -6,6 +6,8 @@ public interface UserService {
 
   User findById(Long userId);
 
+  User findByName(String name);
+
   void add(User user);
 
   void set(User user);
