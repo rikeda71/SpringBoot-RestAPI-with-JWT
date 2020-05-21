@@ -15,7 +15,7 @@ The Example of Rest API with SpringBoot + SpringSecurity + JWT(Json Web Token)
 
   ```shell-script
   $ curl -v -X POST -d '{"name": "user1", "password": "password"}' "http://localhost:8080/login"
-  {"userId":null,"name":"user4", "token":"ey..."} <- copy token
+  {"userId":null,"name":"user1", "token":"ey..."} <- copy token
   ```
 
   - request with authorization
@@ -28,5 +28,5 @@ The Example of Rest API with SpringBoot + SpringSecurity + JWT(Json Web Token)
   
   ```shell script
   curl -XGET -H "Authorization: Bearer ey..." 'http://localhost:8080/auth'
-  {"userId":6,"name":"user4","createdAt":"2020-05-17T13:04:30.88","updatedAt":"2020-05-17T13:04:30.88","lockVersion":0,"deleteFlag":false}
+  {"userId":2,"name":"user1","createdAt":"2020-05-17T13:04:30.88","updatedAt":"2020-05-17T13:04:30.88","lockVersion":0,"deleteFlag":false}
   ```
