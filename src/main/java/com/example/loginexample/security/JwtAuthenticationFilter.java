@@ -1,5 +1,6 @@
 package com.example.loginexample.security;
 
+import com.example.loginexample.domain.AuthResponse;
 import com.example.loginexample.domain.UserForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -26,10 +26,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   private AuthenticationManager manager;
   private PasswordEncoder passwordEncoder;
+  private ObjectMapper mapper;
 
   public JwtAuthenticationFilter(AuthenticationManager manager, PasswordEncoder passwordEncoder) {
     this.manager = manager;
     this.passwordEncoder = passwordEncoder;
+    this.mapper = new ObjectMapper();
 
     setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
 
@@ -52,12 +54,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   @Override
   protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) {
+    var principal = (LoginUser)auth.getPrincipal();
     String token = Jwts.builder()
-        .setSubject(((User)auth.getPrincipal()).getUsername())
+        .setSubject(principal.getUsername())
         .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
         .signWith(SignatureAlgorithm.HS512, "secret".getBytes())
         .compact();
-    res.addHeader("Authorization", "Bearer " + token);
+    try {
+      var writer = res.getWriter();
+      var authResponse = new AuthResponse(principal.getUserId(), principal.getName(), token);
+      writer.write(this.mapper.writeValueAsString(authResponse));
+      writer.flush();
+    } catch (IOException ie) {
+      System.err.println(ie);
+    }
   }
 
 }
